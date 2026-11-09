@@ -17,6 +17,21 @@ const FOOT_DEPTH = 0.72 - KNEE_DEPTH;
 const GRIP = ARM_REACH - ELBOW_DEPTH;
 const HAND = 0.42 - UPPER_ARM + 0.065;
 const PRESS_REACH = ELBOW_DEPTH + HAND;
+const SQUAT_BAR = new THREE.Vector3(0, 0.62, -0.24);
+const DOWN = new THREE.Vector3(0, -1, 0);
+
+/** Points an arm so its hand lands on `target` (chest space), with the elbow bending towards `pole`. */
+function aimArm(arm, target, pole) {
+  const toTarget = target.clone().sub(arm.position);
+  const distance = Math.min(Math.max(toTarget.length(), Math.abs(ELBOW_DEPTH - HAND) + 1e-3), ELBOW_DEPTH + HAND - 1e-3);
+  const direction = toTarget.normalize();
+  const along = (ELBOW_DEPTH * ELBOW_DEPTH - HAND * HAND + distance * distance) / (2 * distance);
+  const bend = pole.clone().addScaledVector(direction, -pole.dot(direction)).normalize();
+  const elbow = direction.clone().multiplyScalar(along).addScaledVector(bend, Math.sqrt(Math.max(0, ELBOW_DEPTH * ELBOW_DEPTH - along * along)));
+  const forearm = direction.multiplyScalar(distance).sub(elbow).normalize();
+  arm.quaternion.setFromUnitVectors(DOWN, elbow.normalize());
+  arm.userData.joint.quaternion.setFromUnitVectors(DOWN, forearm.applyQuaternion(arm.quaternion.clone().invert()));
+}
 
 function limb(radius, upper, lower, material) {
   const pivot = new THREE.Group();
@@ -107,7 +122,7 @@ export function createAvatar(color, props) {
   chest.add(barbell);
   const dumbbells = arms.map((arm) => {
     const dumbbell = props.dumbbell.clone();
-    dumbbell.position.set(0, ELBOW_DEPTH - 0.72, 0);
+    dumbbell.position.set(0, -HAND + 0.03 - new THREE.Box3().setFromObject(dumbbell).getSize(new THREE.Vector3()).y / 2, 0);
     dumbbell.visible = false;
     arm.userData.joint.add(dumbbell);
     return dumbbell;
@@ -182,12 +197,6 @@ export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift
     legX[0] = legX[1] = Math.PI / 2 - 0.35;
     kneeX[0] = kneeX[1] = -Math.PI / 2 + 0.35;
   } else if (anim === 'squat') {
-    [0, 1].forEach((i) => {
-      const side = i ? 1 : -1;
-      armX[i] = 0.45;
-      [armZ[i], elbowZ[i]] = reach(0.08, -side * 0.24, ELBOW_DEPTH, GRIP, -side);
-      elbowX[i] = 0;
-    });
   } else if (anim !== 'hang' && speed > 0.1) {
     const swing = Math.sin(time * 9) * Math.min(speed / 3, 1) * 0.7;
     legX[0] = swing;
@@ -265,7 +274,7 @@ export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift
   }
 
   if (anim === 'bench') barbell.position.set(0, SHOULDER_HEIGHT - 0.78 - barRadius, barReach);
-  else barbell.position.set(0, 0.64, -0.2);
+  else barbell.position.set(0, SQUAT_BAR.y - barRadius, SQUAT_BAR.z);
   body.position.y = lift;
   hips.position.set(0, hipY, hipZ);
   hips.rotation.x = hipTilt;
@@ -274,6 +283,8 @@ export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift
   arms.forEach((arm, i) => {
     arm.rotation.set(armX[i], 0, armZ[i]);
     arm.userData.joint.rotation.set(elbowX[i], 0, elbowZ[i]);
+    const side = i ? 1 : -1;
+    if (anim === 'squat') aimArm(arm, new THREE.Vector3(side * 0.5, SQUAT_BAR.y, SQUAT_BAR.z), new THREE.Vector3(side, -1, -0.3));
   });
   legs.forEach((leg, i) => {
     leg.rotation.x = legX[i];
