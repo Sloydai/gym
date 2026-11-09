@@ -15,6 +15,8 @@ const ELBOW_DEPTH = UPPER_ARM + 0.065 * 0.6;
 const KNEE_DEPTH = UPPER_LEG + 0.085 * 0.6;
 const FOOT_DEPTH = 0.72 - KNEE_DEPTH;
 const GRIP = ARM_REACH - ELBOW_DEPTH;
+const HAND = 0.42 - UPPER_ARM + 0.065;
+const PRESS_REACH = ELBOW_DEPTH + HAND;
 
 function limb(radius, upper, lower, material) {
   const pivot = new THREE.Group();
@@ -100,6 +102,7 @@ export function createAvatar(color, props) {
   });
 
   const barbell = props.barbell.clone();
+  const barRadius = new THREE.Box3().setFromObject(barbell).getSize(new THREE.Vector3()).y / 2;
   barbell.visible = false;
   chest.add(barbell);
   const dumbbells = arms.map((arm) => {
@@ -118,7 +121,7 @@ export function createAvatar(color, props) {
   bottle.visible = false;
   arms[1].userData.joint.add(bottle);
 
-  root.userData = { arms, barbell, body, bottle, chest, dumbbells, hat, head, hips, legs, shirt, shoes, towel, towelOn: false };
+  root.userData = { arms, barRadius, barbell, body, bottle, chest, dumbbells, hat, head, hips, legs, shirt, shoes, towel, towelOn: false };
   return root;
 }
 
@@ -142,8 +145,8 @@ export const ACTION_SECONDS = { curl: 1.4, drink: 2, fill: 2.5, loyly: 3, press:
 
 /** Poses the avatar for this frame: `anim` is the steady state, `action` a one-shot on top, `stride` the cardio phase. */
 export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift = 0, seatHeight = 0.45, speed, stride = 0, time }) {
-  const { arms, barbell, body, bottle, chest, dumbbells, head, hips, legs } = avatar.userData;
-  let hipY = 0.78, hipZ = 0, hipTilt = 0, chestTilt = 0, headTilt = 0, barReach = ARM_REACH, pull = 0;
+  const { arms, barRadius, barbell, body, bottle, chest, dumbbells, head, hips, legs } = avatar.userData;
+  let hipY = 0.78, hipZ = 0, hipTilt = 0, chestTilt = 0, headTilt = 0, barReach = PRESS_REACH, pull = 0;
   const armX = [0, 0], armZ = [0.08, -0.08], elbowX = [-0.15, -0.15], elbowZ = [0, 0], legX = [0, 0], kneeX = [0, 0];
   const t = action ? actionTime / ACTION_SECONDS[action] : 0;
 
@@ -209,7 +212,7 @@ export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift
     hipZ = -depth * 0.16;
     chestTilt = depth * 0.45;
   } else if (action === 'press') {
-    barReach = ARM_REACH * (1 - arc(t) * 0.62);
+    barReach = PRESS_REACH - arc(t) * 0.26;
   } else if (action === 'curl') {
     const curl = arc(t);
     armX[0] = armX[1] = -curl * 0.15;
@@ -254,14 +257,14 @@ export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift
     [0, 1].forEach((i) => {
       const side = i ? 1 : -1;
       armX[i] = -Math.PI / 2;
-      [armZ[i], elbowZ[i]] = reach(-barReach, -side * 0.14, ELBOW_DEPTH, GRIP, side);
+      [armZ[i], elbowZ[i]] = reach(-barReach, -side * 0.12, ELBOW_DEPTH, HAND, side);
       elbowX[i] = 0;
     });
   } else if (anim === 'squat') {
     [0, 1].forEach((i) => { [legX[i], kneeX[i]] = reach(0.08 - (hipY + 0.02), -hipZ, KNEE_DEPTH, FOOT_DEPTH, 1); });
   }
 
-  if (anim === 'bench') barbell.position.set(0, SHOULDER_HEIGHT - 0.78, barReach + 0.04);
+  if (anim === 'bench') barbell.position.set(0, SHOULDER_HEIGHT - 0.78 - barRadius, barReach);
   else barbell.position.set(0, 0.64, -0.2);
   body.position.y = lift;
   hips.position.set(0, hipY, hipZ);
