@@ -3,6 +3,8 @@ import http from 'node:http';
 import path from 'node:path';
 import { WebSocketServer } from 'ws';
 
+import { startNpcs } from './npcs.mjs';
+
 const root = path.dirname(new URL(import.meta.url).pathname);
 const port = Number(process.argv[2] || process.env.PORT || 8790);
 const CAPACITY = 70;
@@ -33,7 +35,7 @@ const server = http.createServer((request, response) => {
 const wss = new WebSocketServer({ path: '/presence', server });
 
 function send(client, message) {
-  if (client.socket.readyState === 1) client.socket.send(JSON.stringify(message));
+  if (client.socket?.readyState === 1) client.socket.send(JSON.stringify(message));
 }
 
 function broadcast(room, message) {
@@ -74,7 +76,7 @@ wss.on('connection', (socket, request) => {
   const url = new URL(request.url, 'http://localhost');
   const roomName = ROOMS.includes(url.searchParams.get('room')) ? url.searchParams.get('room') : ROOMS[0];
   const room = rooms.get(roomName);
-  if (room.clients.size >= CAPACITY) {
+  if ([...room.clients.values()].filter((entry) => !entry.npc).length >= CAPACITY) {
     socket.send(JSON.stringify({ kind: 'full' }));
     socket.close();
     return;
@@ -90,6 +92,7 @@ wss.on('connection', (socket, request) => {
   room.clients.set(client.id, client);
   send(client, { id: client.id, kind: 'welcome', players: [...room.clients.values()].map(publicState), room: roomName, sauna: saunaState(room) });
   broadcast(room, { kind: 'join', player: publicState(client) });
+  greet(room);
 
   socket.on('message', (data) => {
     let message;
@@ -127,5 +130,7 @@ setInterval(() => {
     broadcast(room, { kind: 'poses', poses });
   }
 }, 100);
+
+const greet = startNpcs(rooms, { broadcast, createId: () => String(nextId++), layoutFile: path.join(root, 'layout.json') });
 
 server.listen(port, () => console.log(`Gym on http://127.0.0.1:${port}`));
