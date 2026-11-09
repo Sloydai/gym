@@ -25,16 +25,16 @@ Open http://127.0.0.1:8790. Open a second tab, or another device on the same net
 
 Each room holds up to 70 people: 72 stations on the floor and 21 seats in the sauna.
 
-## Make it your own with Claude Code
+## Build your own world with Claude Code
 
-This repository is also a Claude Code plugin marketplace with one skill, `build-gym`. It runs the game, renames it, rearranges or adds equipment (generating new models through the Sloyd MCP server with your own key), and puts it online.
+Gym is also a template for any multiplayer place: a university, hospital, city square, office, library, café, school, airport, club and more. This repository is a Claude Code plugin marketplace with one skill, `build-world`. It copies the template into your own project, plans the place with you, generates the models through the Sloyd MCP server with your own key, sets up stations, poses and background visitors, and puts it online.
 
 ```
 /plugin marketplace add Sloydai/gym
 /plugin install gym@gym
 ```
 
-Then ask, for example: "add a row of rowing machines along the windows", or "deploy this to Render".
+Then ask, for example: "turn this into a university lecture hall with a podium", "make a hospital ward with beds and a waiting room", or "add a row of rowing machines along the windows".
 
 ## New models
 

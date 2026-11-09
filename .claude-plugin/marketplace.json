@@ -10,7 +10,7 @@
     {
       "name": "gym",
       "source": "./plugins/gym",
-      "description": "The build-gym skill: runs the Gym game, adds or rearranges equipment with Sloyd models, and puts it online."
+      "description": "The build-world skill: turns the Gym template into your own multiplayer 3D place (university, hospital, city, office, caf\u00e9 and more) with Sloyd models."
     }
   ]
 }
