@@ -1,0 +1,16 @@
+{
+  "name": "gym",
+  "description": "A quiet multiplayer browser gym under a starry Nordic sky, with three.js and Sloyd models.",
+  "owner": {
+    "name": "Sloyd AS",
+    "email": "martin@sloyd.ai",
+    "url": "https://www.sloyd.ai"
+  },
+  "plugins": [
+    {
+      "name": "gym",
+      "source": "./plugins/gym",
+      "description": "The build-gym skill: runs the Gym game, adds or rearranges equipment with Sloyd models, and puts it online."
+    }
+  ]
+}

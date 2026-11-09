@@ -1,0 +1,14 @@
+{
+  "name": "gym",
+  "version": "1.0.0",
+  "description": "The build-gym skill: runs the Gym multiplayer browser game, adds or rearranges equipment with Sloyd-generated models, and deploys it.",
+  "author": {
+    "name": "Martin Truong (Sloyd AS)",
+    "email": "martin@sloyd.ai",
+    "url": "https://www.sloyd.ai"
+  },
+  "homepage": "https://github.com/Sloydai/gym",
+  "repository": "https://github.com/Sloydai/gym",
+  "license": "MIT",
+  "keywords": ["game", "gym", "multiplayer", "three.js", "sloyd"]
+}
