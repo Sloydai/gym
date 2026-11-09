@@ -53,7 +53,7 @@ which equipment and how much of it, and whether it should go online.
 | Equipment layout | the zones in `buildWorld` in `src/world.js` (`grid`, `station`, `dumbbellRack`) |
 | Model sizes | `SIZES` in `src/world.js` (`height` or `length` in metres) |
 | Exercises, sets, cardio, hydration | `EXERCISES`, `CARDIO`, `HYDRATION`, `BOTTLE_SIPS` in `src/main.js` |
-| Avatar poses | `animateAvatar` in `src/avatar.js` |
+| Avatar poses | `animateAvatar` in `src/avatar.js` (two-segment limbs; `reach` solves elbows and knees) |
 | Night sky and aurora | `nightSky` in `src/world.js` |
 | Wall wordmark, title | `wordmark('GYM', …)` in `src/world.js`, `<title>` and `.boot h1` in `index.html` |
 
@@ -115,7 +115,8 @@ Restart the server after editing `server.mjs`; reload the page after editing any
 each new station: the avatar should walk to it, face the right way and animate. For screenshots,
 `node tools/shot.mjs <url> <out.png> "<script>"` runs a script in the page (it can call
 `gym.use('<kind>', <index>)`), and `node tools/click-test.mjs <url> <kind>` clicks a station with a
-real mouse event. Headless Chrome renders slowly, so judge motion in a real browser.
+real mouse event. `tools/poses.html` renders every avatar pose side by side (`?side=1` for profile).
+Headless Chrome renders slowly, so judge motion in a real browser.
 
 ## 8. Put it online
 
