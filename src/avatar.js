@@ -257,7 +257,7 @@ export function animateAvatar(avatar, { action, actionTime, anim, hang = 0, lift
     [0, 1].forEach((i) => {
       const side = i ? 1 : -1;
       armX[i] = -Math.PI / 2;
-      [armZ[i], elbowZ[i]] = reach(-barReach, -side * 0.12, ELBOW_DEPTH, HAND, side);
+      [armZ[i], elbowZ[i]] = reach(-barReach, -side * 0.12, ELBOW_DEPTH, HAND, -side);
       elbowX[i] = 0;
     });
   } else if (anim === 'squat') {
