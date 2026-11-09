@@ -1,6 +1,6 @@
 {
-  "name": "gym",
-  "description": "A quiet multiplayer browser gym under a starry Nordic sky, with three.js and Sloyd models.",
+  "name": "world",
+  "description": "Build your own multiplayer 3D place in the browser (gym, university, hospital, city and more) with three.js and Sloyd models.",
   "owner": {
     "name": "Sloyd AS",
     "email": "martin@sloyd.ai",
@@ -8,9 +8,9 @@
   },
   "plugins": [
     {
-      "name": "gym",
-      "source": "./plugins/gym",
-      "description": "The build-world skill: turns the Gym template into your own multiplayer 3D place (university, hospital, city, office, caf\u00e9 and more) with Sloyd models."
+      "name": "world",
+      "source": "./plugins/world",
+      "description": "The build-world skill: turns the Gym template into your own multiplayer 3D place (university, hospital, city, office, café and more) with Sloyd models."
     }
   ]
 }

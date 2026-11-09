@@ -31,7 +31,7 @@ Gym is also a template for any multiplayer place: a university, hospital, city s
 
 ```
 /plugin marketplace add Sloydai/gym
-/plugin install gym@gym
+/plugin install world@world
 ```
 
 Then ask, for example: "turn this into a university lecture hall with a podium", "make a hospital ward with beds and a waiting room", or "add a row of rowing machines along the windows".
