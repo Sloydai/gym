@@ -50,7 +50,9 @@ node tools/generate.mjs <name>   # names and prompts in tools/models.json
 
 ## Put it online
 
-The game needs a long-running Node server for its WebSocket, so use a host such as [Render](https://render.com) (Web Service, build `npm install`, start `npm start`) or [Fly.io](https://fly.io) (`fly launch`, `fly deploy`). Run a single instance: rooms and players live in the server's memory.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Sloydai/gym)
+
+The game needs a long-running Node server for its WebSocket, so use a host such as [Render](https://render.com) (the button above uses `render.yaml`: free Web Service, build `npm install`, start `npm start`) or [Fly.io](https://fly.io) (`fly launch`, `fly deploy`). Run a single instance: rooms and players live in the server's memory.
 
 ## Credits
 

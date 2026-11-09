@@ -123,8 +123,9 @@ Headless Chrome renders slowly, so judge motion in a real browser.
 The game needs a long-running Node server for its WebSocket (`/presence`), so static hosting
 won't work. The server reads `PORT`, and the page switches to `wss://` under https.
 
-- **Render**: push the repository to GitHub, create a Web Service, Node runtime, build
-  `npm install`, start `npm start`. The free plan sleeps after 15 idle minutes.
+- **Render**: push the repository to GitHub, then open
+  `https://render.com/deploy?repo=<repository URL>`; `render.yaml` sets up a free Node Web Service
+  (build `npm install`, start `npm start`). The free plan sleeps after 15 idle minutes.
 - **Fly.io**: `fly launch` (pick a region near the players, no database), then `fly deploy`.
 
 Run exactly one instance: rooms, players and the sauna queue live in the server's memory, so a
